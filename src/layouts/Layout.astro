@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<title>Math Club</title>
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+
+
+			header {
+				background-color: #0066cc;
+				color: white;
+				padding: 20px 0;
+				text-align: center;
+			}
+
+			body {
+				background-color: #f9f9f9;
+				font-family: 'Inter', sans-serif;
+				line-height: 1.6;
+			}
+
+			main{
+
+
+				color: #333;
+				max-width: 800px;
+				margin: 40px auto;
+			}
+
+			nav ul {
+				list-style: none;
+				display: flex;
+				justify-content: center;
+				gap: 20px;
+				margin-top: 10px;
+			}
+
+			nav a {
+				color: white;
+				text-decoration: none;
+				font-weight: bold;
+			}
+
+			section {
+
+				margin: 40px auto;
+				padding: 0 20px;
+			}
+
+			h2 {
+				margin-bottom: 10px;
+				color: #0066cc;
+			}
+
+			footer {
+				background-color: #0066cc;
+				color: white;
+				text-align: center;
+				padding: 10px 0;
+				margin-top: 40px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header>
+			<h1>Welcome to the Math Club</h1>
+			<nav>
+				<ul>
+					<li><a href="/">About</a></li>
+					<li><a href="/accomplishments">Accomplishments</a></li>
+					<li><a href="/estimathon">CK Estimathon</a></li>
+					<li><a href="/IntBee/int-bee">CK Integration Bee</a></li>
+				</ul>
+			</nav>
+		</header>
+		<main>
+			<slot />
+		</main>
+		<footer>
+			<p>&copy; 2025 Math Club</p>
+			<p>
+				Visitors:
+				<img src="https://hits.sh/ck-mathclub/ck-mathclub.github.io.svg?style=flat-square&label=visits" alt="Visitor counter">
+			</p>
+		</footer>
+	</body>
+</html>
+
+<style>
+	html,
+	body {
+		margin: 0;
+		width: 100%;
+		height: 100%;
+	}
+</style>
