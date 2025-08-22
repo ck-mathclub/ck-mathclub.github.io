@@ -2,15 +2,18 @@
 
 ---
 
-<div id="polyhedra-container" class="mb-4 w-108 h-18 flex justify-center items-center overflow-hidden"></div>
+<div id="polyhedra-container" class="w-108 h-18 flex justify-center items-center overflow-hidden"></div>
 
 <script>
   import * as THREE from 'three';
 
-  // Wait for DOM to be ready
-  document.addEventListener('DOMContentLoaded', () => {
+  // Initialize polyhedra - works with view transitions
+  function initPolyhedra() {
     const container = document.getElementById('polyhedra-container');
     if (!container) return;
+
+    // Clear any existing content
+    container.innerHTML = '';
 
     // Scene setup
     const scene = new THREE.Scene();
@@ -210,5 +213,9 @@
       }
       renderer.dispose();
     };
-  });
+  }
+
+  // Handle both initial load and view transitions
+  document.addEventListener('DOMContentLoaded', initPolyhedra);
+  document.addEventListener('astro:page-load', initPolyhedra);
 </script>
