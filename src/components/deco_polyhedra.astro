@@ -1,0 +1,211 @@
+---
+
+---
+
+<div id="polyhedra-container" class="w-144 h-24 border-1 flex justify-center items-center overflow-hidden"></div>
+
+<script>
+  import * as THREE from 'three';
+
+  // Wait for DOM to be ready
+  document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('polyhedra-container');
+    if (!container) return;
+
+    // Scene setup
+    const scene = new THREE.Scene();
+    const camera = new THREE.OrthographicCamera(
+      -15, 15, // left, right
+      2.5, -2.5,   // top, bottom
+      0.1, 1000 // near, far
+    );
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+
+    renderer.setSize(container.offsetWidth, container.offsetHeight);
+    renderer.setClearColor(0x000000, 0); // Transparent background
+    container.appendChild(renderer.domElement);
+
+    // Minimal lighting - just very low ambient for depth perception
+    const ambientLight = new THREE.AmbientLight(0x404040, 0.2);
+    scene.add(ambientLight);
+
+    // Remove directional light for flat shading
+
+    // Colors for each polyhedron
+    const colors = [0xff6b6b, 0x4ecdc4, 0x45b7d1, 0x96ceb4, 0xfeca57];
+
+    // Create the five Platonic solids with wireframe edges on top
+    const polyhedra: THREE.Mesh[] = [];
+    const wireframes: THREE.LineSegments[] = [];
+    const spacing = 5.0;
+
+    // 1. Tetrahedron - solid faces with wireframe on top
+    const tetraGeometry = new THREE.TetrahedronGeometry(2);
+    const tetraMaterial = new THREE.MeshBasicMaterial({ color: colors[0], side: THREE.FrontSide });
+    const tetrahedron = new THREE.Mesh(tetraGeometry, tetraMaterial);
+
+    // Create wireframe that renders on top
+    const tetraEdges = new THREE.EdgesGeometry(tetraGeometry);
+    const tetraWireframe = new THREE.LineSegments(tetraEdges, new THREE.LineBasicMaterial({
+      color: 0xeaeaeb, // Background color
+      linewidth: 2,
+      depthTest: false, // Always render on top
+      transparent: true,
+      opacity: 1.0
+    }));
+
+    tetrahedron.position.x = -2 * spacing;
+    tetraWireframe.position.x = -2 * spacing;
+    // Slight Z offset to ensure wireframe renders in front
+    tetraWireframe.position.z = 0.01;
+
+    polyhedra.push(tetrahedron);
+    wireframes.push(tetraWireframe);
+    scene.add(tetrahedron);
+    scene.add(tetraWireframe);
+
+    // 2. Cube (Hexahedron) - solid faces with wireframe on top
+    const cubeGeometry = new THREE.BoxGeometry(2.3, 2.3, 2.3);
+    const cubeMaterial = new THREE.MeshBasicMaterial({ color: colors[1], side: THREE.FrontSide });
+    const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+
+    const cubeEdges = new THREE.EdgesGeometry(cubeGeometry);
+    const cubeWireframe = new THREE.LineSegments(cubeEdges, new THREE.LineBasicMaterial({
+      color: 0xeaeaeb,
+      linewidth: 2,
+      depthTest: false,
+      transparent: true,
+      opacity: 1.0
+    }));
+
+    cube.position.x = -spacing;
+    cubeWireframe.position.x = -spacing;
+    cubeWireframe.position.z = 0.01;
+
+    polyhedra.push(cube);
+    wireframes.push(cubeWireframe);
+    scene.add(cube);
+    scene.add(cubeWireframe);
+
+    // 3. Octahedron - solid faces with wireframe on top
+    const octaGeometry = new THREE.OctahedronGeometry(2);
+    const octaMaterial = new THREE.MeshBasicMaterial({ color: colors[2], side: THREE.FrontSide });
+    const octahedron = new THREE.Mesh(octaGeometry, octaMaterial);
+
+    const octaEdges = new THREE.EdgesGeometry(octaGeometry);
+    const octaWireframe = new THREE.LineSegments(octaEdges, new THREE.LineBasicMaterial({
+      color: 0xeaeaeb,
+      linewidth: 2,
+      depthTest: false,
+      transparent: true,
+      opacity: 1.0
+    }));
+
+    octahedron.position.x = 0;
+    octaWireframe.position.x = 0;
+    octaWireframe.position.z = 0.01;
+
+    polyhedra.push(octahedron);
+    wireframes.push(octaWireframe);
+    scene.add(octahedron);
+    scene.add(octaWireframe);
+
+    // 4. Dodecahedron - solid faces with wireframe on top
+    const dodecaGeometry = new THREE.DodecahedronGeometry(2.0);
+    const dodecaMaterial = new THREE.MeshBasicMaterial({ color: colors[3], side: THREE.FrontSide });
+    const dodecahedron = new THREE.Mesh(dodecaGeometry, dodecaMaterial);
+
+    const dodecaEdges = new THREE.EdgesGeometry(dodecaGeometry);
+    const dodecaWireframe = new THREE.LineSegments(dodecaEdges, new THREE.LineBasicMaterial({
+      color: 0xeaeaeb,
+      linewidth: 2,
+      depthTest: false,
+      transparent: true,
+      opacity: 1.0
+    }));
+
+    dodecahedron.position.x = spacing;
+    dodecaWireframe.position.x = spacing;
+    dodecaWireframe.position.z = 0.01;
+
+    polyhedra.push(dodecahedron);
+    wireframes.push(dodecaWireframe);
+    scene.add(dodecahedron);
+    scene.add(dodecaWireframe);
+
+    // 5. Icosahedron - solid faces with wireframe on top
+    const icosaGeometry = new THREE.IcosahedronGeometry(2.2);
+    const icosaMaterial = new THREE.MeshBasicMaterial({ color: colors[4], side: THREE.FrontSide });
+    const icosahedron = new THREE.Mesh(icosaGeometry, icosaMaterial);
+
+    const icosaEdges = new THREE.EdgesGeometry(icosaGeometry);
+    const icosaWireframe = new THREE.LineSegments(icosaEdges, new THREE.LineBasicMaterial({
+      color: 0xeaeaeb,
+      linewidth: 2,
+      depthTest: false,
+      transparent: true,
+      opacity: 1.0
+    }));
+
+    icosahedron.position.x = 2 * spacing;
+    icosaWireframe.position.x = 2 * spacing;
+    icosaWireframe.position.z = 0.01;
+
+    polyhedra.push(icosahedron);
+    wireframes.push(icosaWireframe);
+    scene.add(icosahedron);
+    scene.add(icosaWireframe);
+
+    // Position camera for orthographic view
+    camera.position.z = 10;
+    camera.position.y = 0;
+
+    // Animation loop
+    function animate() {
+      requestAnimationFrame(animate);
+
+      // Rotate each polyhedron and its wireframe together
+      polyhedra.forEach((poly, index) => {
+        poly.rotation.x += 0.01 + index * 0.002;
+        poly.rotation.y += 0.01 + index * 0.003;
+
+        // Rotate corresponding wireframe
+        const wireframe = wireframes[index];
+        wireframe.rotation.x = poly.rotation.x;
+        wireframe.rotation.y = poly.rotation.y;
+      });
+
+      renderer.render(scene, camera);
+    }
+
+    animate();
+
+    // Handle window resize
+    function handleResize() {
+      if (!container) return;
+
+      const width = container.offsetWidth;
+      const height = container.offsetHeight;
+      const aspect = width / height;
+
+      // Update orthographic camera bounds
+      camera.left = -2.5 * aspect;
+      camera.right = 2.5 * aspect;
+      camera.top = 2.5;
+      camera.bottom = -2.5;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+    }
+
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup function
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (container && renderer.domElement) {
+        container.removeChild(renderer.domElement);
+      }
+      renderer.dispose();
+    };
+  });
+</script>

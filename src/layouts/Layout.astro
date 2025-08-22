@@ -16,9 +16,9 @@ import {ClientRouter} from "astro:transitions";
 </head>
 <body>
 <header transition:animate="initial">
-    <nav id="main-nav" class="h-12 flex items-center justify-center">
-        <ul>
-            <li><a href="/">About</a></li>
+    <nav id="main-nav" class="bg-accent-200 text-blue-900 h-12 flex items-center justify-center border-b-1 border-accent-250">
+        <ul >
+            <li><a href="/" >About</a></li>
             <li><a href="/accomplishments">Accomplishments</a></li>
             <li><a href="/estimathon">CK Estimathon</a></li>
             <li><a href="/IntBee/int-bee">CK Integration Bee</a></li>
@@ -50,7 +50,6 @@ import {ClientRouter} from "astro:transitions";
         left: 0;
         width: 100%;
         z-index: 50;
-        background-color: #0066cc;
         //box-shadow: 0 2px 32px rgba(255, 255, 255, 1);
     }
 
