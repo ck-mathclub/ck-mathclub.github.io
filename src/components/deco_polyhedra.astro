@@ -2,7 +2,7 @@
 
 ---
 
-<div id="polyhedra-container" class="w-144 h-24 border-1 flex justify-center items-center overflow-hidden"></div>
+<div id="polyhedra-container" class="mb-4 w-108 h-18 flex justify-center items-center overflow-hidden"></div>
 
 <script>
   import * as THREE from 'three';
@@ -15,8 +15,8 @@
     // Scene setup
     const scene = new THREE.Scene();
     const camera = new THREE.OrthographicCamera(
-      -15, 15, // left, right
-      2.5, -2.5,   // top, bottom
+      -12, 12, // left, right
+      2, -2,   // top, bottom
       0.1, 1000 // near, far
     );
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -25,11 +25,9 @@
     renderer.setClearColor(0x000000, 0); // Transparent background
     container.appendChild(renderer.domElement);
 
-    // Minimal lighting - just very low ambient for depth perception
-    const ambientLight = new THREE.AmbientLight(0x404040, 0.2);
-    scene.add(ambientLight);
-
-    // Remove directional light for flat shading
+    // No lighting - for pure color rendering
+    // const ambientLight = new THREE.AmbientLight(0x404040, 0.2);
+    // scene.add(ambientLight);
 
     // Colors for each polyhedron
     const colors = [0xff6b6b, 0x4ecdc4, 0x45b7d1, 0x96ceb4, 0xfeca57];
@@ -39,120 +37,125 @@
     const wireframes: THREE.LineSegments[] = [];
     const spacing = 5.0;
 
-    // 1. Tetrahedron - solid faces with wireframe on top
+    // Helper function to create tube wireframes with consistent width
+    const createTubeWireframe = (geometry: THREE.BufferGeometry, radius = 2) => {
+      const edges = new THREE.EdgesGeometry(geometry);
+      const positions = edges.attributes.position.array as Float32Array;
+      const group = new THREE.Group();
+
+      // Keep track of unique vertices to avoid duplicate spheres
+      const vertices = new Set<string>();
+
+      // Create tubes for each edge
+      for (let i = 0; i < positions.length; i += 6) {
+        const start = new THREE.Vector3(positions[i], positions[i + 1], positions[i + 2]);
+        const end = new THREE.Vector3(positions[i + 3], positions[i + 4], positions[i + 5]);
+
+        // Add vertices to set (using string key for uniqueness)
+        vertices.add(`${start.x.toFixed(6)},${start.y.toFixed(6)},${start.z.toFixed(6)}`);
+        vertices.add(`${end.x.toFixed(6)},${end.y.toFixed(6)},${end.z.toFixed(6)}`);
+
+        // Create a curve from start to end point
+        const curve = new THREE.LineCurve3(start, end);
+        const tubeGeometry = new THREE.TubeGeometry(curve, 1, radius, 12, false);
+        const tubeMaterial = new THREE.MeshBasicMaterial({
+          color: 0xd0e6fa, // Background color
+          side: THREE.FrontSide
+        });
+        const tube = new THREE.Mesh(tubeGeometry, tubeMaterial);
+        group.add(tube);
+      }
+
+      // Create spheres at each unique vertex
+      const sphereGeometry = new THREE.SphereGeometry(radius * 1.1, 8, 6); // Slightly larger than tube radius
+      const sphereMaterial = new THREE.MeshBasicMaterial({
+        color: 0xeaeaeb, // Same background color
+        side: THREE.FrontSide
+      });
+
+      for (const vertexKey of vertices) {
+        const [x, y, z] = vertexKey.split(',').map(Number);
+        const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+        sphere.position.set(x, y, z);
+        group.add(sphere);
+      }
+
+      return group;
+    };
+
+    // 1. Tetrahedron - solid faces with tube wireframe
     const tetraGeometry = new THREE.TetrahedronGeometry(2);
     const tetraMaterial = new THREE.MeshBasicMaterial({ color: colors[0], side: THREE.FrontSide });
     const tetrahedron = new THREE.Mesh(tetraGeometry, tetraMaterial);
 
-    // Create wireframe that renders on top
-    const tetraEdges = new THREE.EdgesGeometry(tetraGeometry);
-    const tetraWireframe = new THREE.LineSegments(tetraEdges, new THREE.LineBasicMaterial({
-      color: 0xeaeaeb, // Background color
-      linewidth: 2,
-      depthTest: false, // Always render on top
-      transparent: true,
-      opacity: 1.0
-    }));
+    // Create tube wireframe
+    const tetraWireframe = createTubeWireframe(tetraGeometry, 0.08);
 
     tetrahedron.position.x = -2 * spacing;
     tetraWireframe.position.x = -2 * spacing;
-    // Slight Z offset to ensure wireframe renders in front
-    tetraWireframe.position.z = 0.01;
 
     polyhedra.push(tetrahedron);
-    wireframes.push(tetraWireframe);
+    wireframes.push(tetraWireframe as any);
     scene.add(tetrahedron);
     scene.add(tetraWireframe);
 
-    // 2. Cube (Hexahedron) - solid faces with wireframe on top
+    // 2. Cube (Hexahedron) - solid faces with tube wireframe
     const cubeGeometry = new THREE.BoxGeometry(2.3, 2.3, 2.3);
     const cubeMaterial = new THREE.MeshBasicMaterial({ color: colors[1], side: THREE.FrontSide });
     const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
 
-    const cubeEdges = new THREE.EdgesGeometry(cubeGeometry);
-    const cubeWireframe = new THREE.LineSegments(cubeEdges, new THREE.LineBasicMaterial({
-      color: 0xeaeaeb,
-      linewidth: 2,
-      depthTest: false,
-      transparent: true,
-      opacity: 1.0
-    }));
+    const cubeWireframe = createTubeWireframe(cubeGeometry, 0.08);
 
     cube.position.x = -spacing;
     cubeWireframe.position.x = -spacing;
-    cubeWireframe.position.z = 0.01;
 
     polyhedra.push(cube);
-    wireframes.push(cubeWireframe);
+    wireframes.push(cubeWireframe as any);
     scene.add(cube);
     scene.add(cubeWireframe);
 
-    // 3. Octahedron - solid faces with wireframe on top
+    // 3. Octahedron - solid faces with tube wireframe
     const octaGeometry = new THREE.OctahedronGeometry(2);
     const octaMaterial = new THREE.MeshBasicMaterial({ color: colors[2], side: THREE.FrontSide });
     const octahedron = new THREE.Mesh(octaGeometry, octaMaterial);
 
-    const octaEdges = new THREE.EdgesGeometry(octaGeometry);
-    const octaWireframe = new THREE.LineSegments(octaEdges, new THREE.LineBasicMaterial({
-      color: 0xeaeaeb,
-      linewidth: 2,
-      depthTest: false,
-      transparent: true,
-      opacity: 1.0
-    }));
+    const octaWireframe = createTubeWireframe(octaGeometry, 0.08);
 
     octahedron.position.x = 0;
     octaWireframe.position.x = 0;
-    octaWireframe.position.z = 0.01;
 
     polyhedra.push(octahedron);
-    wireframes.push(octaWireframe);
+    wireframes.push(octaWireframe as any);
     scene.add(octahedron);
     scene.add(octaWireframe);
 
-    // 4. Dodecahedron - solid faces with wireframe on top
+    // 4. Dodecahedron - solid faces with tube wireframe
     const dodecaGeometry = new THREE.DodecahedronGeometry(2.0);
     const dodecaMaterial = new THREE.MeshBasicMaterial({ color: colors[3], side: THREE.FrontSide });
     const dodecahedron = new THREE.Mesh(dodecaGeometry, dodecaMaterial);
 
-    const dodecaEdges = new THREE.EdgesGeometry(dodecaGeometry);
-    const dodecaWireframe = new THREE.LineSegments(dodecaEdges, new THREE.LineBasicMaterial({
-      color: 0xeaeaeb,
-      linewidth: 2,
-      depthTest: false,
-      transparent: true,
-      opacity: 1.0
-    }));
+    const dodecaWireframe = createTubeWireframe(dodecaGeometry, 0.08);
 
     dodecahedron.position.x = spacing;
     dodecaWireframe.position.x = spacing;
-    dodecaWireframe.position.z = 0.01;
 
     polyhedra.push(dodecahedron);
-    wireframes.push(dodecaWireframe);
+    wireframes.push(dodecaWireframe as any);
     scene.add(dodecahedron);
     scene.add(dodecaWireframe);
 
-    // 5. Icosahedron - solid faces with wireframe on top
+    // 5. Icosahedron - solid faces with tube wireframe
     const icosaGeometry = new THREE.IcosahedronGeometry(2.2);
     const icosaMaterial = new THREE.MeshBasicMaterial({ color: colors[4], side: THREE.FrontSide });
     const icosahedron = new THREE.Mesh(icosaGeometry, icosaMaterial);
 
-    const icosaEdges = new THREE.EdgesGeometry(icosaGeometry);
-    const icosaWireframe = new THREE.LineSegments(icosaEdges, new THREE.LineBasicMaterial({
-      color: 0xeaeaeb,
-      linewidth: 2,
-      depthTest: false,
-      transparent: true,
-      opacity: 1.0
-    }));
+    const icosaWireframe = createTubeWireframe(icosaGeometry, 0.08);
 
     icosahedron.position.x = 2 * spacing;
     icosaWireframe.position.x = 2 * spacing;
-    icosaWireframe.position.z = 0.01;
 
     polyhedra.push(icosahedron);
-    wireframes.push(icosaWireframe);
+    wireframes.push(icosaWireframe as any);
     scene.add(icosahedron);
     scene.add(icosaWireframe);
 
@@ -166,10 +169,10 @@
 
       // Rotate each polyhedron and its wireframe together
       polyhedra.forEach((poly, index) => {
-        poly.rotation.x += 0.01 + index * 0.002;
-        poly.rotation.y += 0.01 + index * 0.003;
+        poly.rotation.x += 0.005
+        poly.rotation.y += 0.005
 
-        // Rotate corresponding wireframe
+        // Rotate corresponding wireframe (now a Group)
         const wireframe = wireframes[index];
         wireframe.rotation.x = poly.rotation.x;
         wireframe.rotation.y = poly.rotation.y;
@@ -189,10 +192,10 @@
       const aspect = width / height;
 
       // Update orthographic camera bounds
-      camera.left = -2.5 * aspect;
-      camera.right = 2.5 * aspect;
-      camera.top = 2.5;
-      camera.bottom = -2.5;
+      camera.left = -2 * aspect;
+      camera.right = 2 * aspect;
+      camera.top = 2;
+      camera.bottom = -2;
       camera.updateProjectionMatrix();
       renderer.setSize(width, height);
     }

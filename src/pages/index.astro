@@ -1,18 +1,25 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Deco_polyhedra from "../components/deco_polyhedra.astro";
+import thumbnail from "../components/thumbnail.astro";
+import Thumbnail from "../components/thumbnail.astro";
 ---
 <Layout>
-    <div class="w-full h-180 bg-accent-200">
-        <div class="border-1 pt-40 pl-20">
+    <div class="w-full h-250 bg-accent-200">
+        <div class="border-1 pt-40 pl-20 flex flex-col gap-4">
             <div class="text-5xl text-accent-800 font-bold">
                 Welcome to<br>Cranbrook Math Club!
-
             </div>
-            <Deco_polyhedra></Deco_polyhedra>
-            <button>
+
+            <button class="bg-accent-800 text-accent-200 py-2 px-4 rounded-[16px] w-fit" type="button">
                 Join our mailing list ->
             </button>
+            <Deco_polyhedra></Deco_polyhedra>
+            <div class="flex gap-8">
+                <Thumbnail></Thumbnail>
+                <Thumbnail></Thumbnail>
+                <Thumbnail></Thumbnail>
+            </div>
         </div>
         <div class="flex border-1">
 
