@@ -1,0 +1,307 @@
+---
+export interface Props {
+    items: any[];
+    visibleItems?: {
+        mobile: number;
+        tablet: number;
+        desktop: number;
+    };
+    autoAdvanceMs?: number;
+}
+
+const {
+    items,
+    visibleItems = { mobile: 1, tablet: 2, desktop: 3 },
+    autoAdvanceMs = 3000
+} = Astro.props;
+---
+
+<div class="carousel-container w-full">
+    <div class="relative overflow-hidden px-20">
+        <!-- Left navigation button -->
+        <button class="carousel-nav carousel-nav-left absolute left-5 top-1/2 transform -translate-y-1/2 z-10 bg-accent-800 bg-opacity-70 hover:bg-opacity-90 text-accent-200 rounded-full w-10 h-10 flex items-center justify-center transition-all duration-200 shadow-lg opacity-0">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+        </button>
+
+        <!-- Right navigation button -->
+        <button class="carousel-nav carousel-nav-right absolute right-5 top-1/2 transform -translate-y-1/2 z-10 bg-accent-800 bg-opacity-70 hover:bg-opacity-90 text-accent-200 rounded-full w-10 h-10 flex items-center justify-center transition-all duration-200 shadow-lg opacity-0">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+        </button>
+
+        <div class="carousel-track flex transition-transform duration-500 ease-in-out">
+            <!-- Just the original items, no duplicates -->
+            {items.map((item, index) => (
+                <div class="carousel-slide flex-shrink-0 px-2" data-index={index}>
+                    <slot />
+                </div>
+            ))}
+        </div>
+    </div>
+</div>
+
+<script define:vars={{ visibleItems, autoAdvanceMs, itemCount: items.length }}>
+    document.addEventListener('DOMContentLoaded', function() {
+        const carouselContainer = document.querySelector('.carousel-container');
+        const carousel = carouselContainer?.querySelector('.carousel-track');
+        const slides = carouselContainer?.querySelectorAll('.carousel-slide');
+        const prevButton = carouselContainer?.querySelector('.carousel-nav-left');
+        const nextButton = carouselContainer?.querySelector('.carousel-nav-right');
+
+        if (!carousel || !slides.length) return;
+
+        let currentIndex = 0;
+        const originalSlideCount = itemCount;
+        let isTransitioning = false;
+
+        function getVisibleSlides() {
+            if (window.innerWidth >= 1024) { // lg breakpoint
+                return visibleItems.desktop;
+            } else if (window.innerWidth >= 768) { // md breakpoint
+                return visibleItems.tablet;
+            } else {
+                return visibleItems.mobile;
+            }
+        }
+
+        function shouldShowControls() {
+            const visibleSlides = getVisibleSlides();
+            return originalSlideCount > visibleSlides;
+        }
+
+        function updateCarousel(instant = false) {
+            const visibleSlides = getVisibleSlides();
+            const slideWidth = 100 / visibleSlides;
+            const translateX = -(currentIndex * slideWidth);
+
+            // Update slide widths
+            slides.forEach(slide => {
+                slide.style.width = `${slideWidth}%`;
+            });
+
+            // Show/hide navigation buttons
+            const showControls = shouldShowControls();
+            if (prevButton && nextButton) {
+                prevButton.style.opacity = showControls ? '1' : '0';
+                nextButton.style.opacity = showControls ? '1' : '0';
+                prevButton.style.pointerEvents = showControls ? 'auto' : 'none';
+                nextButton.style.pointerEvents = showControls ? 'auto' : 'none';
+            }
+
+            if (showControls) {
+                carousel.style.transition = instant ? 'none' : 'transform 0.5s ease-in-out';
+                carousel.style.transform = `translateX(${translateX}%)`;
+
+                if (instant) {
+                    requestAnimationFrame(() => {
+                        carousel.style.transition = 'transform 0.5s ease-in-out';
+                    });
+                }
+            } else {
+                carousel.style.transform = 'translateX(0%)';
+                carousel.style.transition = 'transform 0.5s ease-in-out';
+            }
+        }
+
+        function nextSlide() {
+            if (!shouldShowControls() || isTransitioning) return;
+
+            isTransitioning = true;
+            currentIndex++;
+
+            const visibleSlides = getVisibleSlides();
+            const maxIndex = originalSlideCount - visibleSlides;
+
+            // If we've reached the end, jump back to the beginning
+            if (currentIndex > maxIndex) {
+                currentIndex = 0;
+            }
+
+            updateCarousel();
+
+            setTimeout(() => {
+                isTransitioning = false;
+            }, 500);
+        }
+
+        function prevSlide() {
+            if (!shouldShowControls() || isTransitioning) return;
+
+            isTransitioning = true;
+            currentIndex--;
+
+            const visibleSlides = getVisibleSlides();
+            const maxIndex = originalSlideCount - visibleSlides;
+
+            // If we've gone before the beginning, jump to the end
+            if (currentIndex < 0) {
+                currentIndex = maxIndex;
+            }
+
+            updateCarousel();
+
+            setTimeout(() => {
+                isTransitioning = false;
+            }, 500);
+        }
+
+        // Universal timer system - completely separate from resize logic
+        let universalTimer;
+        let timerStartTime = 0;
+        const ADVANCE_INTERVAL = 5000; // 5 seconds
+
+        function startUniversalTimer() {
+            stopUniversalTimer();
+            timerStartTime = Date.now();
+            universalTimer = setInterval(() => {
+                if (!isTransitioning && shouldShowControls()) {
+                    nextSlide();
+                }
+            }, ADVANCE_INTERVAL);
+        }
+
+        function stopUniversalTimer() {
+            if (universalTimer) {
+                clearInterval(universalTimer);
+                universalTimer = null;
+            }
+        }
+
+        function resetUniversalTimer() {
+            // Reset the timer with fresh 5-second interval
+            startUniversalTimer();
+        }
+
+        // Reset carousel on window resize - respond immediately + debounced cleanup
+        let resizeTimeout;
+        window.addEventListener('resize', function() {
+            // Immediate response for visual updates during dragging
+            updateCarousel(true);
+
+            // Debounced cleanup for position reset (only when resize stops)
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                // Reset to start position only after resize stops
+                const wasAtStart = currentIndex === 0;
+                if (!wasAtStart) {
+                    currentIndex = 0;
+                    updateCarousel(true);
+                }
+            }, 150);
+        });
+
+        // Initialize carousel
+        updateCarousel();
+        startUniversalTimer();
+
+        // Pause on hover - timer management (fix button hover issues)
+        if (carouselContainer) {
+            let hoverTimeout;
+
+            carouselContainer.addEventListener('mouseenter', (e) => {
+                // Clear any pending restart
+                clearTimeout(hoverTimeout);
+                stopUniversalTimer();
+            });
+
+            carouselContainer.addEventListener('mouseleave', (e) => {
+                // Only restart if we're actually leaving the entire carousel area
+                // Use a small delay to prevent flicker when moving between elements
+                clearTimeout(hoverTimeout);
+                hoverTimeout = setTimeout(() => {
+                    startUniversalTimer();
+                }, 100);
+            });
+        }
+
+        // Navigation button event listeners - reset timer on click
+        if (prevButton && nextButton) {
+            prevButton.addEventListener('click', function() {
+                stopUniversalTimer();
+                prevSlide();
+                // Wait for transition to complete, then reset timer
+                setTimeout(() => {
+                    resetUniversalTimer();
+                }, 500);
+            });
+
+            nextButton.addEventListener('click', function() {
+                stopUniversalTimer();
+                nextSlide();
+                // Wait for transition to complete, then reset timer
+                setTimeout(() => {
+                    resetUniversalTimer();
+                }, 500);
+            });
+        }
+
+        // Touch/Swipe support for mobile devices
+        let touchStartX = 0;
+        let touchEndX = 0;
+        let touchStartTime = 0;
+        let isDragging = false;
+        const MIN_SWIPE_DISTANCE = 50; // Minimum distance for a swipe
+        const MAX_SWIPE_TIME = 300; // Maximum time for a swipe (ms)
+
+        if (carouselContainer) {
+            // Touch start
+            carouselContainer.addEventListener('touchstart', (e) => {
+                if (!shouldShowControls()) return;
+
+                touchStartX = e.touches[0].clientX;
+                touchStartTime = Date.now();
+                isDragging = true;
+
+                // Stop auto-advance during touch interaction
+                stopUniversalTimer();
+            }, { passive: true });
+
+            // Touch move (optional: could add visual feedback here)
+            carouselContainer.addEventListener('touchmove', (e) => {
+                if (!isDragging || !shouldShowControls()) return;
+                // Prevent default scrolling during swipe
+                e.preventDefault();
+            }, { passive: false });
+
+            // Touch end - detect swipe
+            carouselContainer.addEventListener('touchend', (e) => {
+                if (!isDragging || !shouldShowControls()) return;
+
+                touchEndX = e.changedTouches[0].clientX;
+                const touchDuration = Date.now() - touchStartTime;
+                const swipeDistance = touchStartX - touchEndX;
+                const absSwipeDistance = Math.abs(swipeDistance);
+
+                isDragging = false;
+
+                // Check if it's a valid swipe (far enough and fast enough)
+                if (absSwipeDistance > MIN_SWIPE_DISTANCE && touchDuration < MAX_SWIPE_TIME) {
+                    if (swipeDistance > 0) {
+                        // Swiped left - move to next slide
+                        nextSlide();
+                    } else {
+                        // Swiped right - move to previous slide
+                        prevSlide();
+                    }
+
+                    // Reset timer after swipe
+                    setTimeout(() => {
+                        resetUniversalTimer();
+                    }, 500);
+                } else {
+                    // Not a valid swipe, restart timer immediately
+                    resetUniversalTimer();
+                }
+            }, { passive: true });
+
+            // Touch cancel (in case touch is interrupted)
+            carouselContainer.addEventListener('touchcancel', () => {
+                isDragging = false;
+                resetUniversalTimer();
+            }, { passive: true });
+        }
+    });
+</script>

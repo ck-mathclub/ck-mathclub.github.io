@@ -16,15 +16,46 @@ import {ClientRouter} from "astro:transitions";
 </head>
 <body>
 <header transition:animate="initial">
-    <nav id="main-nav" class="bg-accent-200 text-blue-900 h-12 flex items-center justify-center border-b-1 border-accent-250">
-        <ul >
-            <li><a href="/" >About</a></li>
-            <li><a href="/accomplishments">Accomplishments</a></li>
-            <li><a href="/estimathon">CK Estimathon</a></li>
-            <li><a href="/IntBee/int-bee">CK Integration Bee</a></li>
-        </ul>
-    </nav>
+    <nav id="main-nav" class="bg-accent-200 text-blue-900 border-b-1 border-accent-250 navigation-container">
+        <div class="nav-row main-row h-12 flex items-center justify-center">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="/" class="nav-link">About</a>
+                </li>
+                <li class="nav-item dropdown" data-submenu="accomplishments">
+                    <a href="/accomplishments" class="nav-link">Accomplishments</a>
+                </li>
+                <li class="nav-item dropdown" data-submenu="estimathon">
+                    <a href="/estimathon" class="nav-link">CK Estimathon</a>
+                </li>
+                <li class="nav-item dropdown" data-submenu="intbee">
+                    <a href="/IntBee/int-bee" class="nav-link">CK Integration Bee</a>
+                </li>
+            </ul>
+        </div>
 
+        <!-- Second row for sub-pages -->
+        <div class="nav-row sub-row h-12 flex items-center justify-center">
+            <ul class="nav-menu" id="accomplishments-sub">
+                <li class="nav-item"><a href="/accomplishments#competitions" class="nav-link">Competitions</a></li>
+                <li class="nav-item"><a href="/accomplishments#awards" class="nav-link">Awards</a></li>
+                <li class="nav-item"><a href="/accomplishments#publications" class="nav-link">Publications</a></li>
+            </ul>
+
+            <ul class="nav-menu" id="estimathon-sub">
+                <li class="nav-item"><a href="/estimathon#2025" class="nav-link">2025 Contest</a></li>
+                <li class="nav-item"><a href="/estimathon#2024" class="nav-link">2024 Results</a></li>
+                <li class="nav-item"><a href="/estimathon#archive" class="nav-link">Archive</a></li>
+            </ul>
+
+            <ul class="nav-menu" id="intbee-sub">
+                <li class="nav-item"><a href="/IntBee/int-bee#current" class="nav-link">Current Season</a></li>
+                <li class="nav-item"><a href="/IntBee/int-bee#seeding" class="nav-link">Seeding</a></li>
+                <li class="nav-item"><a href="/IntBee/int-bee#rules" class="nav-link">Rules</a></li>
+                <li class="nav-item"><a href="/IntBee/int-bee#past" class="nav-link">Past Results</a></li>
+            </ul>
+        </div>
+    </nav>
 </header>
 <main class="w-full pt-[40px]">
     <slot/>
@@ -52,5 +83,95 @@ import {ClientRouter} from "astro:transitions";
         z-index: 50;
         //box-shadow: 0 2px 32px rgba(255, 255, 255, 1);
     }
-
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const dropdownItems = document.querySelectorAll('.dropdown[data-submenu]');
+        const subMenus = document.querySelectorAll('.sub-row .nav-menu');
+        const navigationContainer = document.querySelector('.navigation-container');
+        const subRow = document.querySelector('.sub-row');
+
+        let currentActiveMenu = null;
+        let hideTimeout = null;
+
+        // Function to hide all submenus
+        function hideAllSubMenus() {
+            subMenus.forEach(menu => menu.classList.remove('active'));
+            navigationContainer.classList.remove('show-submenu');
+            currentActiveMenu = null;
+        }
+
+        // Function to show specific submenu
+        function showSubMenu(submenuId) {
+            // Clear any pending hide timeout
+            if (hideTimeout) {
+                clearTimeout(hideTimeout);
+                hideTimeout = null;
+            }
+
+            // Only update if we're switching to a different menu
+            if (currentActiveMenu !== submenuId) {
+                hideAllSubMenus();
+                const targetMenu = document.getElementById(submenuId + '-sub');
+                if (targetMenu) {
+                    targetMenu.classList.add('active');
+                    navigationContainer.classList.add('show-submenu');
+                    currentActiveMenu = submenuId;
+                }
+            }
+        }
+
+        // Function to schedule hiding submenus
+        function scheduleHideSubMenus(delay = 200) {
+            if (hideTimeout) {
+                clearTimeout(hideTimeout);
+            }
+            hideTimeout = setTimeout(() => {
+                hideAllSubMenus();
+            }, delay);
+        }
+
+        // Add hover listeners to dropdown items
+        dropdownItems.forEach(item => {
+            const submenuId = item.getAttribute('data-submenu');
+
+            item.addEventListener('mouseenter', () => {
+                showSubMenu(submenuId);
+            });
+
+            item.addEventListener('mouseleave', () => {
+                scheduleHideSubMenus();
+            });
+        });
+
+        // Keep submenu visible when hovering over the sub-row
+        subRow.addEventListener('mouseenter', () => {
+            // Cancel any pending hide
+            if (hideTimeout) {
+                clearTimeout(hideTimeout);
+                hideTimeout = null;
+            }
+        });
+
+        subRow.addEventListener('mouseleave', () => {
+            scheduleHideSubMenus();
+        });
+
+        // Hide submenus when leaving the entire navigation area
+        navigationContainer.addEventListener('mouseleave', () => {
+            scheduleHideSubMenus(50); // Shorter delay for leaving entire nav
+        });
+
+        // Handle individual submenu hover to keep them visible
+        subMenus.forEach(menu => {
+            menu.addEventListener('mouseenter', () => {
+                // Cancel any pending hide when hovering over submenu
+                if (hideTimeout) {
+                    clearTimeout(hideTimeout);
+                    hideTimeout = null;
+                }
+            });
+        });
+    });
+</script>

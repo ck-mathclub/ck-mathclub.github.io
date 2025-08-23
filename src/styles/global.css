@@ -29,14 +29,55 @@ main{
     color: #333;
 }
 
+/* Navigation Styles - Two Row System */
+.navigation-container {
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.nav-row {
+    width: 100%;
+}
+
+.main-row {
+    /* Always visible */
+}
+
+.sub-row {
+    height: 0;
+    opacity: 0;
+    transition: all 0.3s ease;
+    background-color: var(--color-accent-250);
+}
+
+/* Show second row only when a dropdown item is being hovered */
+.navigation-container.show-submenu .sub-row {
+    height: 48px; /* h-12 equivalent */
+    opacity: 1;
+}
+
 nav ul {
     list-style: none;
     display: flex;
     justify-content: center;
     gap: 40px;
+    margin: 0;
+    padding: 0;
 }
 
-nav li {
+/* Sub-row menu management - hide all by default */
+.sub-row .nav-menu {
+    display: none;
+}
+
+/* Show specific submenu when parent is hovered */
+.sub-row .nav-menu.active {
+    display: flex;
+}
+
+/* Main navigation items */
+.nav-item {
+    position: relative;
     height: 30px;
     display: flex;
     align-items: center;
@@ -44,13 +85,29 @@ nav li {
     border-radius: 4px;
 }
 
-nav li:hover {
-
+.nav-link {
+    padding: 8px 16px;
+    text-decoration: none;
+    color: inherit;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
 }
 
-nav a {
-    text-decoration: none;
-    font-weight: bold;
+.nav-item:hover .nav-link {
+    background-color: var(--color-accent-250);
+}
+
+/* Add arrow indicators for dropdown items */
+.dropdown .nav-link::after {
+    content: "▼";
+    font-size: 10px;
+    margin-left: 8px;
+    transition: transform 0.2s ease;
+}
+
+.dropdown:hover .nav-link::after {
+    transform: rotate(180deg);
 }
 
 section {

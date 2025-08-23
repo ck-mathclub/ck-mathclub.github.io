@@ -1,24 +1,34 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Deco_polyhedra from "../components/deco_polyhedra.astro";
-import thumbnail from "../components/thumbnail.astro";
 import Thumbnail from "../components/thumbnail.astro";
+import Carousel from "../components/carousel.astro";
+
+// Create array of thumbnail data (you can expand this easily)
+const thumbnailItems = [
+    { id: 1 },
+    { id: 2 },
+    { id: 3 }
+];
 ---
 <Layout>
-    <div class="w-full h-250 bg-accent-200">
-        <div class="border-1 pt-40 pl-20 flex flex-col gap-4">
-            <div class="text-5xl text-accent-800 font-bold">
-                Welcome to<br>Cranbrook Math Club!
+    <div class="w-full bg-accent-200 flex flex-col items-center">
+        <div class="border-1 pt-40 flex flex-col gap-20 max-w-[1440px] w-full">
+            <div class="flex flex-col gap-4 mx-20">
+                <div class="text-5xl text-accent-800 font-bold">
+                    Welcome to<br>Cranbrook Math Club!
+                </div>
+
+                <button class="bg-accent-200 border-1 border-accent-800 text-accent-800 py-2 mb-2 px-4 rounded-[16px] w-fit" type="button">
+                    Join our mailing list ->
+                </button>
+                <Deco_polyhedra></Deco_polyhedra>
             </div>
 
-            <button class="bg-accent-800 text-accent-200 py-2 mb-2 px-4 rounded-[16px] w-fit" type="button">
-                Join our mailing list ->
-            </button>
-            <Deco_polyhedra></Deco_polyhedra>
-            <div class="flex gap-8">
-                <Thumbnail></Thumbnail>
-                <Thumbnail></Thumbnail>
-                <Thumbnail></Thumbnail>
+            <div class="mx-0">
+                <Carousel items={thumbnailItems}>
+                    <Thumbnail />
+                </Carousel>
             </div>
         </div>
         <div class="flex border-1">
@@ -26,30 +36,3 @@ import Thumbnail from "../components/thumbnail.astro";
         </div>
     </div>
 </Layout>
-
-
-
-<!--# About Us-->
-<!--	-->
-<!--The Math Club is a community of students who love solving problems, preparing for competitions, and having fun with Math! We come together and seek an enriching experience in math as a community.-->
-<!--	-->
-<!--# Upcoming Events-->
-<!-- - 🍦 Final Icecream Party – May 22, 2025-->
-<!-- - 📒 Math Journal Publication-->
-<!--	-->
-<!--# Resources-->
-<!--	-->
-<!--Explore amazing math problems at <a href="https://artofproblemsolving.com" target="_blank">AoPS</a>.-->
-
-
-<!--# Math Club News-->
-
-<!--See what the club has accomplished on our <a href="accomplishments.html">Accomplishments</a> page!-->
-
-<!--# Join Us-->
-<!--Email us at: <a href="mailto:chinde@cranbrook.edu">chinde@cranbrook.edu</a>-->
-
-
-<!--Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.-->
-
-<!--Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.-->
