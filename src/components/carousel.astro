@@ -14,9 +14,12 @@ const {
     visibleItems = { mobile: 1, tablet: 2, desktop: 3 },
     autoAdvanceMs = 3000
 } = Astro.props;
+
+// Generate unique ID for this carousel instance
+const carouselId = `carousel-${Math.random().toString(36).substr(2, 9)}`;
 ---
 
-<div class="carousel-container w-full">
+<div class="carousel-container w-full" id={carouselId}>
     <div class="relative overflow-hidden px-20">
         <!-- Left navigation button -->
         <button class="carousel-nav carousel-nav-left absolute left-5 top-1/2 transform -translate-y-1/2 z-10 bg-accent-800 bg-opacity-70 hover:bg-opacity-90 text-accent-200 rounded-full w-10 h-10 flex items-center justify-center transition-all duration-200 shadow-lg opacity-0">
@@ -43,13 +46,20 @@ const {
     </div>
 </div>
 
-<script define:vars={{ visibleItems, autoAdvanceMs, itemCount: items.length }}>
-    document.addEventListener('DOMContentLoaded', function() {
-        const carouselContainer = document.querySelector('.carousel-container');
-        const carousel = carouselContainer?.querySelector('.carousel-track');
-        const slides = carouselContainer?.querySelectorAll('.carousel-slide');
-        const prevButton = carouselContainer?.querySelector('.carousel-nav-left');
-        const nextButton = carouselContainer?.querySelector('.carousel-nav-right');
+<script define:vars={{ visibleItems, autoAdvanceMs, itemCount: items.length, carouselId }}>
+    // Wait for DOM to be fully loaded and use the specific carousel ID
+    function initCarousel() {
+        const carouselContainer = document.getElementById(carouselId);
+        if (!carouselContainer) {
+            // If not found, try again after a short delay
+            setTimeout(initCarousel, 100);
+            return;
+        }
+
+        const carousel = carouselContainer.querySelector('.carousel-track');
+        const slides = carouselContainer.querySelectorAll('.carousel-slide');
+        const prevButton = carouselContainer.querySelector('.carousel-nav-left');
+        const nextButton = carouselContainer.querySelector('.carousel-nav-right');
 
         if (!carousel || !slides.length) return;
 
@@ -58,9 +68,9 @@ const {
         let isTransitioning = false;
 
         function getVisibleSlides() {
-            if (window.innerWidth >= 1024) { // lg breakpoint
+            if (window.innerWidth >= 1014) { // lg breakpoint
                 return visibleItems.desktop;
-            } else if (window.innerWidth >= 768) { // md breakpoint
+            } else if (window.innerWidth >= 740) { // md breakpoint
                 return visibleItems.tablet;
             } else {
                 return visibleItems.mobile;
@@ -198,24 +208,22 @@ const {
         startUniversalTimer();
 
         // Pause on hover - timer management (fix button hover issues)
-        if (carouselContainer) {
-            let hoverTimeout;
+        let hoverTimeout;
 
-            carouselContainer.addEventListener('mouseenter', (e) => {
-                // Clear any pending restart
-                clearTimeout(hoverTimeout);
-                stopUniversalTimer();
-            });
+        carouselContainer.addEventListener('mouseenter', (e) => {
+            // Clear any pending restart
+            clearTimeout(hoverTimeout);
+            stopUniversalTimer();
+        });
 
-            carouselContainer.addEventListener('mouseleave', (e) => {
-                // Only restart if we're actually leaving the entire carousel area
-                // Use a small delay to prevent flicker when moving between elements
-                clearTimeout(hoverTimeout);
-                hoverTimeout = setTimeout(() => {
-                    startUniversalTimer();
-                }, 100);
-            });
-        }
+        carouselContainer.addEventListener('mouseleave', (e) => {
+            // Only restart if we're actually leaving the entire carousel area
+            // Use a small delay to prevent flicker when moving between elements
+            clearTimeout(hoverTimeout);
+            hoverTimeout = setTimeout(() => {
+                startUniversalTimer();
+            }, 100);
+        });
 
         // Navigation button event listeners - reset timer on click
         if (prevButton && nextButton) {
@@ -246,62 +254,67 @@ const {
         const MIN_SWIPE_DISTANCE = 50; // Minimum distance for a swipe
         const MAX_SWIPE_TIME = 300; // Maximum time for a swipe (ms)
 
-        if (carouselContainer) {
-            // Touch start
-            carouselContainer.addEventListener('touchstart', (e) => {
-                if (!shouldShowControls()) return;
+        // Touch start
+        carouselContainer.addEventListener('touchstart', (e) => {
+            if (!shouldShowControls()) return;
 
-                touchStartX = e.touches[0].clientX;
-                touchStartTime = Date.now();
-                isDragging = true;
+            touchStartX = e.touches[0].clientX;
+            touchStartTime = Date.now();
+            isDragging = true;
 
-                // Stop auto-advance during touch interaction
-                stopUniversalTimer();
-            }, { passive: true });
+            // Stop auto-advance during touch interaction
+            stopUniversalTimer();
+        }, { passive: true });
 
-            // Touch move (optional: could add visual feedback here)
-            carouselContainer.addEventListener('touchmove', (e) => {
-                if (!isDragging || !shouldShowControls()) return;
-                // Prevent default scrolling during swipe
-                e.preventDefault();
-            }, { passive: false });
+        // Touch move (optional: could add visual feedback here)
+        carouselContainer.addEventListener('touchmove', (e) => {
+            if (!isDragging || !shouldShowControls()) return;
+            // Prevent default scrolling during swipe
+            e.preventDefault();
+        }, { passive: false });
 
-            // Touch end - detect swipe
-            carouselContainer.addEventListener('touchend', (e) => {
-                if (!isDragging || !shouldShowControls()) return;
+        // Touch end - detect swipe
+        carouselContainer.addEventListener('touchend', (e) => {
+            if (!isDragging || !shouldShowControls()) return;
 
-                touchEndX = e.changedTouches[0].clientX;
-                const touchDuration = Date.now() - touchStartTime;
-                const swipeDistance = touchStartX - touchEndX;
-                const absSwipeDistance = Math.abs(swipeDistance);
+            touchEndX = e.changedTouches[0].clientX;
+            const touchDuration = Date.now() - touchStartTime;
+            const swipeDistance = touchStartX - touchEndX;
+            const absSwipeDistance = Math.abs(swipeDistance);
 
-                isDragging = false;
+            isDragging = false;
 
-                // Check if it's a valid swipe (far enough and fast enough)
-                if (absSwipeDistance > MIN_SWIPE_DISTANCE && touchDuration < MAX_SWIPE_TIME) {
-                    if (swipeDistance > 0) {
-                        // Swiped left - move to next slide
-                        nextSlide();
-                    } else {
-                        // Swiped right - move to previous slide
-                        prevSlide();
-                    }
-
-                    // Reset timer after swipe
-                    setTimeout(() => {
-                        resetUniversalTimer();
-                    }, 500);
+            // Check if it's a valid swipe (far enough and fast enough)
+            if (absSwipeDistance > MIN_SWIPE_DISTANCE && touchDuration < MAX_SWIPE_TIME) {
+                if (swipeDistance > 0) {
+                    // Swiped left - move to next slide
+                    nextSlide();
                 } else {
-                    // Not a valid swipe, restart timer immediately
-                    resetUniversalTimer();
+                    // Swiped right - move to previous slide
+                    prevSlide();
                 }
-            }, { passive: true });
 
-            // Touch cancel (in case touch is interrupted)
-            carouselContainer.addEventListener('touchcancel', () => {
-                isDragging = false;
+                // Reset timer after swipe
+                setTimeout(() => {
+                    resetUniversalTimer();
+                }, 500);
+            } else {
+                // Not a valid swipe, restart timer immediately
                 resetUniversalTimer();
-            }, { passive: true });
-        }
-    });
+            }
+        }, { passive: true });
+
+        // Touch cancel (in case touch is interrupted)
+        carouselContainer.addEventListener('touchcancel', () => {
+            isDragging = false;
+            resetUniversalTimer();
+        }, { passive: true });
+    }
+
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCarousel);
+    } else {
+        initCarousel();
+    }
 </script>

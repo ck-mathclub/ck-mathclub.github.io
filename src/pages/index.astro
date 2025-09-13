@@ -13,14 +13,19 @@ const thumbnailItems = [
 ---
 <Layout>
     <div class="w-full bg-accent-200 flex flex-col items-center">
-        <div class="border-1 pt-40 flex flex-col gap-20 max-w-[1440px] w-full">
+        <div class="border-0 pt-40 flex flex-col gap-20 max-w-[1440px] w-full pb-10">
             <div class="flex flex-col gap-4 mx-20">
                 <div class="text-5xl text-accent-800 font-bold">
                     Welcome to<br>Cranbrook Math Club!
                 </div>
 
-                <button class="bg-accent-200 border-1 border-accent-800 text-accent-800 py-2 mb-2 px-4 rounded-[16px] w-fit" type="button">
-                    Join our mailing list ->
+                <button class="mailing-list-button bg-accent-200 border-1 border-accent-800 text-accent-800 py-2 mb-2 px-4 rounded-[16px] w-fit" type="button">
+                    <span>Join our mailing list
+                        <svg class="arrow-icon" width="20" height="16" viewBox="0 0 20 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line class="arrow-stem" x1="2" y1="8" x2="16" y2="8"/>
+                            <polyline class="arrow-head" points="2,4 6,8 2,12"/>
+                        </svg>
+                    </span>
                 </button>
                 <Deco_polyhedra></Deco_polyhedra>
             </div>
@@ -31,8 +36,40 @@ const thumbnailItems = [
                 </Carousel>
             </div>
         </div>
-        <div class="flex border-1">
-
-        </div>
     </div>
 </Layout>
+
+<style>
+    .mailing-list-button {
+        transition: padding-right 0.3s ease;
+    }
+
+    .mailing-list-button .arrow-icon {
+        display: inline;
+        vertical-align: middle;
+        margin-left: 4px;
+        flex-shrink: 0;
+        overflow: hidden;
+    }
+
+    .mailing-list-button .arrow-stem {
+        clip-path: inset(0 100% 0 0);
+        transition: clip-path 0.3s ease;
+    }
+
+    .mailing-list-button .arrow-head {
+        transition: transform 0.3s ease;
+    }
+
+    .mailing-list-button:hover {
+        padding-right: 1.5rem;
+    }
+
+    .mailing-list-button:hover .arrow-stem {
+        clip-path: inset(0 0 0 0);
+    }
+
+    .mailing-list-button:hover .arrow-head {
+        transform: translateX(12px);
+    }
+</style>

@@ -9,9 +9,12 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/mdx": "^4.3.4",
     "@tailwindcss/vite": "^4.1.6",
+    "@tsparticles/confetti": "^3.9.1",
     "astro": "^5.7.12",
-    "three": "^0.179.1"
+    "three": "^0.179.1",
+    "tsparticles": "^3.9.1"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.16",

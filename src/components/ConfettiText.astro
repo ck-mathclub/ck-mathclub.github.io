@@ -1,0 +1,74 @@
+---
+interface Props {
+  text: string;
+}
+
+const { text } = Astro.props;
+---
+
+<span class="confetti-text">
+  {text}
+</span>
+
+<style>
+  .confetti-text {
+    cursor: pointer;
+    font-weight: bold;
+    display: inline-block;
+    transition: color 0.3s ease;
+  }
+
+  .confetti-text:hover {
+    color: #ff6b6b;
+  }
+</style>
+
+<script>
+  import { confetti } from "@tsparticles/confetti";
+
+  function shootConfetti(element: HTMLElement) {
+    const rect = element.getBoundingClientRect();
+    const x = (rect.left + rect.width / 2) / window.innerWidth;
+    const y = (rect.top + rect.height / 2) / window.innerHeight;
+
+    // First layer - main burst
+    confetti({
+      particleCount: 50,
+      spread: 50,
+      startVelocity: 20,
+      origin: { x, y },
+      colors: ["#fb8888", "#ffef7c", "#53ffa9", "#5395ff", "#ef53ff"],
+      shapes: ["circle", "square"],
+      gravity: 1,
+      ticks: 500
+    });
+
+    // Second layer - wider spread with smaller particles
+    setTimeout(() => {
+      confetti({
+        particleCount: 50,
+        spread: 200,
+        startVelocity: 15,
+        origin: { x, y },
+        colors: ["#ff5353", "#ffee53", "#53ffa9", "#5395ff", "#ef53ff"],
+        shapes: ["circle", "square"],
+        gravity: 1,
+        ticks: 500
+      });
+    }, 0);
+  }
+
+  function initConfetti() {
+    const confettiElements = document.querySelectorAll('.confetti-text');
+    confettiElements.forEach((el) => {
+      const htmlEl = el as HTMLElement;
+      if (htmlEl && !(htmlEl as any).confettiAttached) {
+        htmlEl.addEventListener('mouseenter', () => shootConfetti(htmlEl));
+        (htmlEl as any).confettiAttached = true;
+      }
+    });
+  }
+
+  document.addEventListener('astro:page-load', initConfetti);
+  initConfetti();
+</script>

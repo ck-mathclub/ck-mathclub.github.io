@@ -14,9 +14,10 @@
 }
 
 header {
-    background-color: #0066cc;
-    color: white;
+    background-color: rgba(208,230,250, 0.75);
     text-align: center;
+    backdrop-filter: blur(15px) saturate(100%);
+    -webkit-backdrop-filter: blur(15px) saturate(100%);
 }
 
 body {
@@ -29,50 +30,22 @@ main{
     color: #333;
 }
 
-/* Navigation Styles - Two Row System */
+/* Navigation Styles - Standard Dropdown System */
 .navigation-container {
-    transition: all 0.3s ease;
-    overflow: hidden;
+    position: relative;
 }
 
 .nav-row {
     width: 100%;
 }
 
-.main-row {
-    /* Always visible */
-}
-
-.sub-row {
-    height: 0;
-    opacity: 0;
-    transition: all 0.3s ease;
-    background-color: var(--color-accent-250);
-}
-
-/* Show second row only when a dropdown item is being hovered */
-.navigation-container.show-submenu .sub-row {
-    height: 48px; /* h-12 equivalent */
-    opacity: 1;
-}
-
 nav ul {
     list-style: none;
     display: flex;
     justify-content: center;
-    gap: 40px;
+    gap: 0px;
     margin: 0;
     padding: 0;
-}
-
-/* Sub-row menu management - hide all by default */
-.sub-row .nav-menu {
-    display: none;
-}
-
-/* Show specific submenu when parent is hovered */
-.sub-row .nav-menu.active {
-    display: flex;
 }
 
 /* Main navigation items */
@@ -86,28 +59,111 @@ nav ul {
 }
 
 .nav-link {
-    padding: 8px 16px;
+    padding: 0px 16px;
     text-decoration: none;
     color: inherit;
     border-radius: 4px;
     transition: all 0.2s ease;
     white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.nav-item:hover .nav-link {
+.dropdown-trigger {
+    cursor: pointer;
+}
+
+.dropdown-trigger:hover {
     background-color: var(--color-accent-250);
 }
 
-/* Add arrow indicators for dropdown items */
-.dropdown .nav-link::after {
-    content: "▼";
-    font-size: 10px;
-    margin-left: 8px;
-    transition: transform 0.2s ease;
+.nav-item:hover .nav-link:not(.dropdown-trigger) {
+    background-color: var(--color-accent-250);
 }
 
-.dropdown:hover .nav-link::after {
+.dropdown-arrow {
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+}
+
+.dropdown:hover .dropdown-arrow {
     transform: rotate(180deg);
+}
+
+/* Dropdown menu styling */
+.dropdown-menu {
+    position: absolute;
+    top: 39px;
+    left: 0;
+    /* Enhanced glassy translucent background with improved blur */
+    background-color: rgba(208,230,250, 0.8);
+    border: 1px solid var(--color-accent-250);
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    min-width: 200px;
+    visibility: hidden;
+    transition: opacity 0.15s ease, visibility 0s linear 0.15s;
+    z-index: 1000;
+    list-style: none;
+    padding: 4px 0; /* keep constant to prevent jump */
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    backdrop-filter: blur(15px) saturate(100%);
+    -webkit-backdrop-filter: blur(15px) saturate(100%);
+    background-clip: padding-box;
+}
+
+/* Fallback if backdrop-filter unsupported */
+@supports not ((backdrop-filter: blur(4px))) {
+    .dropdown-menu {
+        background: rgba(208,230,250, 0.8);
+        border: 1px solid var(--color-accent-250);
+    }
+
+    header {
+        background-color: rgba(208,230,250, 0.85);
+    }
+}
+
+.dropdown:hover .dropdown-menu,
+.dropdown-menu:hover {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.15s ease;
+
+}
+
+/* Items inherit transparency; add subtle separators */
+.dropdown-menu li + li {
+
+}
+
+.dropdown-menu li {
+    opacity: 0;
+}
+
+.dropdown:hover .dropdown-menu li {
+    opacity: 1;
+}
+
+.dropdown:hover .dropdown-menu li:nth-child(1) { transition-delay: 0.03s; }
+.dropdown:hover .dropdown-menu li:nth-child(2) { transition-delay: 0.06s; }
+.dropdown:hover .dropdown-menu li:nth-child(3) { transition-delay: 0.09s; }
+.dropdown:hover .dropdown-menu li:nth-child(4) { transition-delay: 0.12s; }
+
+.dropdown-link {
+    display: block;
+    padding: 8px 16px;
+    text-decoration: none;
+    text-align: left;
+    color: inherit;
+    white-space: nowrap;
+}
+
+.dropdown-link:hover {
+    background-color: var(--color-accent-250);
 }
 
 section {

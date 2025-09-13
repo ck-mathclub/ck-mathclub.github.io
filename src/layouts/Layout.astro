@@ -16,43 +16,46 @@ import {ClientRouter} from "astro:transitions";
 </head>
 <body>
 <header transition:animate="initial">
-    <nav id="main-nav" class="bg-accent-200 text-blue-900 border-b-1 border-accent-250 navigation-container">
+    <nav id="main-nav" class=" text-blue-900 border-b-1 border-accent-250 navigation-container">
         <div class="nav-row main-row h-12 flex items-center justify-center">
             <ul class="nav-menu">
                 <li class="nav-item">
-                    <a href="/" class="nav-link">About</a>
+                    <a href="/" class="nav-link">Home</a>
                 </li>
-                <li class="nav-item dropdown" data-submenu="accomplishments">
-                    <a href="/accomplishments" class="nav-link">Accomplishments</a>
+                <li class="nav-item dropdown" data-submenu="about">
+                    <span class="nav-link dropdown-trigger">About
+                        <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="2,4 6,8 10,4"/>
+                        </svg>
+                    </span>
+                    <ul class="dropdown-menu">
+                        <li><a href="/about/accomplishments" class="dropdown-link">Accomplishments</a></li>
+                        <li><a href="/about/schedule" class="dropdown-link">Schedule</a></li>
+                    </ul>
                 </li>
-                <li class="nav-item dropdown" data-submenu="estimathon">
-                    <a href="/estimathon" class="nav-link">CK Estimathon</a>
+                <li class="nav-item dropdown" data-submenu="events">
+                    <span class="nav-link dropdown-trigger">Events
+                        <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="2,4 6,8 10,4"/>
+                        </svg>
+                    </span>
+                    <ul class="dropdown-menu">
+                        <li><a href="/events/estimathon" class="dropdown-link">CK Estimathon</a></li>
+                        <li><a href="/events/int-bee" class="dropdown-link">Integration Bee</a></li>
+                        <li><a href="/events/competition-signup" class="dropdown-link">Competition Signup</a></li>
+                    </ul>
                 </li>
-                <li class="nav-item dropdown" data-submenu="intbee">
-                    <a href="/IntBee/int-bee" class="nav-link">CK Integration Bee</a>
+                <li class="nav-item dropdown" data-submenu="journal">
+                    <span class="nav-link dropdown-trigger">Journal
+                        <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="2,4 6,8 10,4"/>
+                        </svg>
+                    </span>
+                    <ul class="dropdown-menu">
+                        <li><a href="/journal/contribute" class="dropdown-link">Contribute</a></li>
+                        <li><a href="/journal/archive" class="dropdown-link">Archive</a></li>
+                    </ul>
                 </li>
-            </ul>
-        </div>
-
-        <!-- Second row for sub-pages -->
-        <div class="nav-row sub-row h-12 flex items-center justify-center">
-            <ul class="nav-menu" id="accomplishments-sub">
-                <li class="nav-item"><a href="/accomplishments#competitions" class="nav-link">Competitions</a></li>
-                <li class="nav-item"><a href="/accomplishments#awards" class="nav-link">Awards</a></li>
-                <li class="nav-item"><a href="/accomplishments#publications" class="nav-link">Publications</a></li>
-            </ul>
-
-            <ul class="nav-menu" id="estimathon-sub">
-                <li class="nav-item"><a href="/estimathon#2025" class="nav-link">2025 Contest</a></li>
-                <li class="nav-item"><a href="/estimathon#2024" class="nav-link">2024 Results</a></li>
-                <li class="nav-item"><a href="/estimathon#archive" class="nav-link">Archive</a></li>
-            </ul>
-
-            <ul class="nav-menu" id="intbee-sub">
-                <li class="nav-item"><a href="/IntBee/int-bee#current" class="nav-link">Current Season</a></li>
-                <li class="nav-item"><a href="/IntBee/int-bee#seeding" class="nav-link">Seeding</a></li>
-                <li class="nav-item"><a href="/IntBee/int-bee#rules" class="nav-link">Rules</a></li>
-                <li class="nav-item"><a href="/IntBee/int-bee#past" class="nav-link">Past Results</a></li>
             </ul>
         </div>
     </nav>
@@ -86,92 +89,15 @@ import {ClientRouter} from "astro:transitions";
 </style>
 
 <script>
+    // Simple initialization for any additional dropdown functionality
     document.addEventListener('DOMContentLoaded', function() {
-        const dropdownItems = document.querySelectorAll('.dropdown[data-submenu]');
-        const subMenus = document.querySelectorAll('.sub-row .nav-menu');
-        const navigationContainer = document.querySelector('.navigation-container');
-        const subRow = document.querySelector('.sub-row');
+        // The dropdowns now work primarily with CSS :hover pseudo-classes
+        // This script is mainly here for any future enhancements
+        console.log('Navigation initialized');
+    });
 
-        let currentActiveMenu = null;
-        let hideTimeout = null;
-
-        // Function to hide all submenus
-        function hideAllSubMenus() {
-            subMenus.forEach(menu => menu.classList.remove('active'));
-            navigationContainer.classList.remove('show-submenu');
-            currentActiveMenu = null;
-        }
-
-        // Function to show specific submenu
-        function showSubMenu(submenuId) {
-            // Clear any pending hide timeout
-            if (hideTimeout) {
-                clearTimeout(hideTimeout);
-                hideTimeout = null;
-            }
-
-            // Only update if we're switching to a different menu
-            if (currentActiveMenu !== submenuId) {
-                hideAllSubMenus();
-                const targetMenu = document.getElementById(submenuId + '-sub');
-                if (targetMenu) {
-                    targetMenu.classList.add('active');
-                    navigationContainer.classList.add('show-submenu');
-                    currentActiveMenu = submenuId;
-                }
-            }
-        }
-
-        // Function to schedule hiding submenus
-        function scheduleHideSubMenus(delay = 200) {
-            if (hideTimeout) {
-                clearTimeout(hideTimeout);
-            }
-            hideTimeout = setTimeout(() => {
-                hideAllSubMenus();
-            }, delay);
-        }
-
-        // Add hover listeners to dropdown items
-        dropdownItems.forEach(item => {
-            const submenuId = item.getAttribute('data-submenu');
-
-            item.addEventListener('mouseenter', () => {
-                showSubMenu(submenuId);
-            });
-
-            item.addEventListener('mouseleave', () => {
-                scheduleHideSubMenus();
-            });
-        });
-
-        // Keep submenu visible when hovering over the sub-row
-        subRow.addEventListener('mouseenter', () => {
-            // Cancel any pending hide
-            if (hideTimeout) {
-                clearTimeout(hideTimeout);
-                hideTimeout = null;
-            }
-        });
-
-        subRow.addEventListener('mouseleave', () => {
-            scheduleHideSubMenus();
-        });
-
-        // Hide submenus when leaving the entire navigation area
-        navigationContainer.addEventListener('mouseleave', () => {
-            scheduleHideSubMenus(50); // Shorter delay for leaving entire nav
-        });
-
-        // Handle individual submenu hover to keep them visible
-        subMenus.forEach(menu => {
-            menu.addEventListener('mouseenter', () => {
-                // Cancel any pending hide when hovering over submenu
-                if (hideTimeout) {
-                    clearTimeout(hideTimeout);
-                    hideTimeout = null;
-                }
-            });
-        });
+    // Re-initialize on page transitions (Astro's client-side routing)
+    document.addEventListener('astro:page-load', function() {
+        console.log('Navigation re-initialized after page transition');
     });
 </script>
