@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>CK MATH - Journals</title>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Cranbrook Math Club's journal collections" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image" href="logo.jpg" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: #f9f9f9;
+        font-family: "Inter", sans-serif;
+        line-height: 1.6;
+        color: #333;
+      }
+
+      header {
+        background-color: #0066cc;
+        color: white;
+        padding: 24px 20px;
+        text-align: center;
+      }
+
+      header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+      }
+
+      nav ul {
+        list-style: none;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 12px;
+      }
+
+      nav a {
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        opacity: 0.9;
+        transition: opacity 0.2s;
+      }
+
+      nav a:hover {
+        opacity: 1;
+        text-decoration: underline;
+      }
+
+      main {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 0 20px;
+      }
+
+      .section-title {
+        color: #0066cc;
+        font-size: 1.5rem;
+        margin-bottom: 24px;
+        border-bottom: 2px solid #0066cc;
+        padding-bottom: 8px;
+      }
+
+      /* Bookshelf Display Layout */
+      .bookshelf-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 30px;
+        margin-top: 20px;
+      }
+
+      .journal-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+      }
+
+      .journal-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+      }
+
+      .journal-cover-link {
+        display: block;
+        width: 100%;
+        max-width: 200px;
+        aspect-ratio: 1 / 1.414; /* Standard A4 / Book Aspect Ratio */
+        margin-bottom: 16px;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        background-color: #f0f4f8;
+        position: relative;
+      }
+
+      .journal-cover-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.3s ease;
+      }
+
+      .journal-card:hover .journal-cover-img {
+        transform: scale(1.03);
+      }
+
+      /* Placeholder state if image isn't loaded yet */
+      .journal-cover-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
+        color: white;
+        font-weight: 700;
+        padding: 16px;
+        text-align: center;
+      }
+
+      .journal-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #1a202c;
+        margin-bottom: 4px;
+      }
+
+      .journal-year {
+        font-size: 0.9rem;
+        color: #0066cc;
+        font-weight: 600;
+        background-color: #e6f0fa;
+        padding: 2px 10px;
+        border-radius: 12px;
+        margin-bottom: 12px;
+        display: inline-block;
+      }
+
+      .journal-desc {
+        font-size: 0.9rem;
+        color: #64748b;
+        margin-bottom: 16px;
+        flex-grow: 1;
+      }
+
+      .read-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background-color: #0066cc;
+        color: white;
+        text-decoration: none;
+        padding: 8px 18px;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: background-color 0.2s;
+      }
+
+      .read-button:hover {
+        background-color: #004e9e;
+      }
+
+      footer {
+        background-color: #0066cc;
+        color: white;
+        text-align: center;
+        padding: 20px 0;
+        margin-top: 60px;
+      }
+
+      footer p {
+        margin-bottom: 8px;
+      }
+
+      .social-link {
+        color: white;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 8px;
+        font-weight: 600;
+        transition: opacity 0.2s;
+      }
+
+      .social-link:hover {
+        opacity: 0.85;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Math Journals</h1>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section id="journals">
+        <h2 class="section-title">Explore Our Publications</h2>
+        
+        <div class="bookshelf-grid">
+          <!-- Journal 6 -->
+          <article class="journal-card">
+            <a href="https://drive.google.com/file/d/1R2WDCYS277q7lpFQEJUzX1zIGB0LwvUA/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="journal-cover-link">
+              <!-- Replace src with your image path when ready -->
+              <img src="images/journal6-cover.jpg" alt="Math Journal 6 Cover" class="journal-cover-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+              <div class="journal-cover-placeholder" style="display: none;">
+                <span>Math Journal 6</span>
+              </div>
+            </a>
+            <h3 class="journal-title">Journal Vol. 6</h3>
+            <span class="journal-year">2025–2026</span>
+            <p class="journal-desc">Collection of articles, problem sets, and math research written by club members.</p>
+            <a href="https://drive.google.com/file/d/1R2WDCYS277q7lpFQEJUzX1zIGB0LwvUA/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="read-button">
+              Read PDF ↗
+            </a>
+          </article>
+
+          <!-- Journal 5 -->
+          <article class="journal-card">
+            <a href="https://drive.google.com/file/d/15Fobk-DYM1121ak_zUfG4ykvJqwQGoeH/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="journal-cover-link">
+              <!-- Replace src with your image path when ready -->
+              <img src="images/journal5-cover.jpg" alt="Math Journal 5 Cover" class="journal-cover-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+              <div class="journal-cover-placeholder" style="display: none;">
+                <span>Math Journal 5</span>
+              </div>
+            </a>
+            <h3 class="journal-title">Journal Vol. 5</h3>
+            <span class="journal-year">2024–2025</span>
+            <p class="journal-desc">Collection of articles, problem sets, and math research written by club members.</p>
+            <a href="https://drive.google.com/file/d/15Fobk-DYM1121ak_zUfG4ykvJqwQGoeH/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="read-button">
+              Read PDF ↗
+            </a>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; 2026 Math Club</p>
+      <p>
+        Visitors:
+        <img
+          src="https://hits.sh/ck-mathclub/ck-mathclub.github.io.svg?style=flat-square&label=visits"
+          alt="Visitor counter"
+        />
+      </p>
+      <a
+        href="https://www.instagram.com/cranbrookmath/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="social-link"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+        </svg>
+        <span>Follow on Instagram</span>
+      </a>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>CK MATH - Meet the Officers</title>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Cranbrook Math Club's officers and board members" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image" href="logo.jpg" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: #f9f9f9;
+        font-family: "Inter", sans-serif;
+        line-height: 1.6;
+        color: #333;
+      }
+
+      header {
+        background-color: #0066cc;
+        color: white;
+        padding: 24px 20px;
+        text-align: center;
+      }
+
+      header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+      }
+
+      nav ul {
+        list-style: none;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 12px;
+      }
+
+      nav a {
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        opacity: 0.9;
+        transition: opacity 0.2s;
+      }
+
+      nav a:hover {
+        opacity: 1;
+        text-decoration: underline;
+      }
+
+      main {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 0 20px;
+      }
+
+      .section-title {
+        color: #0066cc;
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #0066cc;
+        padding-bottom: 8px;
+      }
+
+      /* Officers Grid Layout */
+      .officer-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 20px;
+        margin-bottom: 40px;
+      }
+
+      .officer-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        text-align: center;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+
+      .officer-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+      }
+
+      .officer-name {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #1a202c;
+        margin-bottom: 4px;
+      }
+
+      .officer-role {
+        display: inline-block;
+        background-color: #e6f0fa;
+        color: #0066cc;
+        font-weight: 600;
+        font-size: 0.85rem;
+        padding: 4px 12px;
+        border-radius: 20px;
+        margin-bottom: 8px;
+      }
+
+      .officer-grade {
+        font-size: 0.9rem;
+        color: #64748b;
+        font-weight: 500;
+      }
+
+      /* Collapsible Past Leaders Menu */
+      details.past-leaders {
+        background: white;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        overflow: hidden;
+        margin-top: 30px;
+      }
+
+      summary {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #0066cc;
+        padding: 16px 20px;
+        cursor: pointer;
+        user-select: none;
+        list-style: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #ffffff;
+      }
+
+      summary::-webkit-details-marker {
+        display: none;
+      }
+
+      summary::after {
+        content: "▼";
+        font-size: 0.8rem;
+        transition: transform 0.2s;
+        color: #0066cc;
+      }
+
+      details[open] summary::after {
+        transform: rotate(180deg);
+      }
+
+      summary:hover {
+        background-color: #f0f7ff;
+      }
+
+      .past-leaders-content {
+        padding: 20px;
+        border-top: 1px solid #e2e8f0;
+      }
+
+      .year-group {
+        margin-bottom: 24px;
+      }
+
+      .year-group:last-child {
+        margin-bottom: 0;
+      }
+
+      .year-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #4a5568;
+        margin-bottom: 12px;
+      }
+
+      footer {
+        background-color: #0066cc;
+        color: white;
+        text-align: center;
+        padding: 20px 0;
+        margin-top: 60px;
+      }
+
+      footer p {
+        margin-bottom: 8px;
+      }
+
+      .social-link {
+        color: white;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 8px;
+        font-weight: 600;
+        transition: opacity 0.2s;
+      }
+
+      .social-link:hover {
+        opacity: 0.85;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Meet the Officers</h1>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <!-- Current Officers -->
+      <section id="current-officers">
+        <h2 class="section-title">2026–2027 Officers</h2>
+        <div class="officer-grid">
+          <div class="officer-card">
+            <h3 class="officer-name">Elisa Chen</h3>
+            <span class="officer-role">[add position]</span>
+            <p class="officer-grade">Senior</p>
+          </div>
+          <div class="officer-card">
+            <h3 class="officer-name">Beau Seo</h3>
+            <span class="officer-role">[add position]</span>
+            <p class="officer-grade">Senior</p>
+          </div>
+          <div class="officer-card">
+            <h3 class="officer-name">Taiwen Feng</h3>
+            <span class="officer-role">[add position]</span>
+            <p class="officer-grade">Junior</p>
+          </div>
+          <div class="officer-card">
+            <h3 class="officer-name">Kanav Kalmadi</h3>
+            <span class="officer-role">[add position]</span>
+            <p class="officer-grade">Junior</p>
+          </div>
+          <div class="officer-card">
+            <h3 class="officer-name">Pingkang Qian</h3>
+            <span class="officer-role">[add position]</span>
+            <p class="officer-grade">Senior</p>
+          </div>
+          <div class="officer-card">
+            <h3 class="officer-name">Terry Zhang</h3>
+            <span class="officer-role">[add position]</span>
+            <p class="officer-grade">Junior</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Collapsible Past Leaders Section -->
+      <details class="past-leaders">
+        <summary>Past Leaders</summary>
+        <div class="past-leaders-content">
+          <div class="year-group">
+            <h3 class="year-title">2025–2026 Board</h3>
+            <div class="officer-grid">
+              <div class="officer-card">
+                <h4 class="officer-name">Justin Seo</h4>
+                <span class="officer-role">President</span>
+                <p class="officer-grade">Senior</p>
+              </div>
+              <div class="officer-card">
+                <h4 class="officer-name">Nick Zhang</h4>
+                <span class="officer-role">Co-president</span>
+                <p class="officer-grade">Senior</p>
+              </div>
+              <div class="officer-card">
+                <h4 class="officer-name">Qiqi Chen</h4>
+                <span class="officer-role">Co-president</span>
+                <p class="officer-grade">Senior</p>
+              </div>
+              <div class="officer-card">
+                <h4 class="officer-name">Elisa Chen</h4>
+                <span class="officer-role">Secretary</span>
+                <p class="officer-grade">Junior</p>
+              </div>
+              <div class="officer-card">
+                <h4 class="officer-name">Marina Awad</h4>
+                <span class="officer-role">Outreach</span>
+                <p class="officer-grade">Senior</p>
+              </div>
+              <div class="officer-card">
+                <h4 class="officer-name">Beau Seo</h4>
+                <span class="officer-role">Competition Manager</span>
+                <p class="officer-grade">Junior</p>
+              </div>
+              <div class="officer-card">
+                <h4 class="officer-name">Taiwen Feng</h4>
+                <span class="officer-role">[add position]</span>
+                <p class="officer-grade">Sophomore</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="year-group">
+            <h3 class="year-title">2024–2025 Board</h3>
+            <div class="officer-grid">
+              <div class="officer-card">
+                <h4 class="officer-name">Ariel Zhang</h4>
+                <span class="officer-role">President</span>
+                <p class="officer-grade">Senior</p>
+              </div>
+              <div class="officer-card">
+                <h4 class="officer-name">Simon Hu</h4>
+                <span class="officer-role">Vice President</span>
+                <p class="officer-grade">Senior</p>
+              </div>
+              <div class="officer-card">
+                <h4 class="officer-name">Justin Seo</h4>
+                <span class="officer-role">Vice President</span>
+                <p class="officer-grade">Junior</p>
+              </div>
+              <div class="officer-card">
+                <h4 class="officer-name">Nick Zhang</h4>
+                <span class="officer-role">Journal & Competition Manager</span>
+                <p class="officer-grade">Junior</p>
+              </div>
+              <div class="officer-card">
+                <h4 class="officer-name">Qiqi Chen</h4>
+                <span class="officer-role">Secretary</span>
+                <p class="officer-grade">Junior</p>
+              </div>
+              <div class="officer-card">
+                <h4 class="officer-name">Ryan Wei</h4>
+                <span class="officer-role">Outreach</span>
+                <p class="officer-grade">Junior</p>
+              </div>
+              <div class="officer-card">
+                <h4 class="officer-name">Beau Seo</h4>
+                <span class="officer-role">[add position]</span>
+                <p class="officer-grade">Sophomore</p>
+              </div>
+              <div class="officer-card">
+                <h4 class="officer-name">Elisa Chen</h4>
+                <span class="officer-role">Journal Manager</span>
+                <p class="officer-grade">Sophomore</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
+    </main>
+
+    <footer>
+      <p>&copy; 2026 Math Club</p>
+      <p>
+        Visitors:
+        <img
+          src="https://hits.sh/ck-mathclub/ck-mathclub.github.io.svg?style=flat-square&label=visits"
+          alt="Visitor counter"
+        />
+      </p>
+      <a
+        href="https://www.instagram.com/cranbrookmath/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="social-link"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+        </svg>
+        <span>Follow on Instagram</span>
+      </a>
+    </footer>
+  </body>
+</html>
